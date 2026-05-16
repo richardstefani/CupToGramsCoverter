@@ -1,0 +1,13 @@
+{
+  "name": "gramscale",
+  "version": "1.0.0",
+  "description": "Cups to Grams Converter - GramScale",
+  "scripts": {
+    "build": "tailwindcss -i ./src/input.css -o ./dist/output.css --minify",
+    "dev": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1",
+    "postcss": "^8.4.31"
+  }
+}
