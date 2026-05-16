@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cups to Grams Converter — GramScale</title>
+    <meta name="description" content="Instant, ingredient-specific cup-to-gram and mL-to-gram conversions for perfect baking. No account. No guessing.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        :root {
+            --bg:           #13100C;
+            --bg-mid:       #1C160F;
+            --parchment:    #F5EDE0;
+            --parchment-w:  #EDE1CE;
+            --parchment-d:  #DDD0B8;
+            --text:         #2A180C;
+            --text-mid:     #5A3A24;
+            --text-dim:     #8C6A4E;
+            --terra:        #C05228;
+            --terra-dark:   #9E4220;
+            --terra-light:  #E07A50;
+            --amber:        #D99A3C;
+            --amber-dim:    #B07C28;
+            --border-dark:  rgba(245,237,224,0.10);
+            --border-mid:   rgba(245,237,224,0.16);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--parchment);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 90% 60% at 15% 0%, rgba(42,24,12,0.9) 0%, transparent 55%),
+                radial-gradient(ellipse 50% 50% at 85% 90%, rgba(192,82,40,0.07) 0%, transparent 50%),
+                radial-gradient(ellipse 70% 40% at 50% 50%, rgba(28,22,15,1) 30%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .page-content { position: relative; z-index: 2; }
+        .font-display { font-family: 'Playfair Display', Georgia, serif; }
+
+        .ring {
+            position: fixed;
+            border-radius: 50%;
+            border: 1px solid rgba(245,237,224,0.04);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .site-logo {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: var(--parchment);
+        }
+        .site-logo span { color: var(--terra); }
+
+        .card {
+            background: var(--parchment);
+            border-radius: 20px;
+            color: var(--text);
+            box-shadow:
+                0 0 0 1px rgba(0,0,0,0.25),
+                0 4px 16px rgba(0,0,0,0.3),
+                0 24px 64px rgba(0,0,0,0.35),
+                0 64px 128px rgba(0,0,0,0.2);
+        }
+
+        .ing-btn {
+            width: 100%;
+            background: var(--parchment-w);
+            border: 2px solid var(--parchment-d);
+            border-radius: 12px;
+            padding: 13px 16px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text);
+            cursor: pointer;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: border-color 0.2s, background 0.2s;
+            min-height: 54px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .ing-btn:hover, .ing-btn.open { border-color: var(--terra); background: var(--parchment); }
+
+        .dropdown-wrap { position: relative; }
+
+        .dropdown {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0; right: 0;
+            background: var(--parchment);
+            border: 2px solid var(--terra);
+            border-radius: 14px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+            z-index: 200;
+            overflow: hidden;
+            display: none;
+        }
+        .dropdown.open { display: block; }
+
+        .dropdown-search {
+            width: 100%;
+            padding: 11px 14px;
+            border: none;
+            border-bottom: 1.5px solid var(--parchment-d);
+            background: var(--parchment-w);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            color: var(--text);
+            outline: none;
+        }
+        .dropdown-search::placeholder { color: var(--text-dim); }
+
+        .dropdown-list { max-height: 260px; overflow-y: auto; }
+        .dropdown-list::-webkit-scrollbar { width: 4px; }
+        .dropdown-list::-webkit-scrollbar-track { background: var(--parchment-w); }
+        .dropdown-list::-webkit-scrollbar-thumb { background: var(--parchment-d); border-radius: 2px; }
+
+        .d-item {
+            padding: 11px 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--text);
+            transition: background 0.12s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .d-item:hover { background: var(--parchment-w); }
+        .d-item.selected { background: rgba(192,82,40,0.08); color: var(--terra-dark); font-weight: 600; }
+        .d-item .d-badge {
+            margin-left: auto;
+            font-size: 12px;
+            color: var(--text-dim);
+            background: var(--parchment-d);
+            padding: 2px 8px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        .pro-tip {
+            background: rgba(217,154,60,0.09);
+            border-left: 4px solid var(--amber);
+            border-radius: 0 10px 10px 0;
+            padding: 12px 14px;
+        }
+        .pro-tip-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.10em;
+            text-transform: uppercase;
+            color: var(--amber-dim);
+            margin-bottom: 4px;
+        }
+        .pro-tip-text {
+            font-size: 13.5px;
+            color: var(--text-mid);
+            line-height: 1.55;
+        }
+
+        .slabel {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 7px;
+        }
+
+        .m-input {
+            width: 100%;
+            background: var(--parchment-w);
+            border: 2px solid var(--parchment-d);
+            border-radius: 12px;
+            padding: 14px 10px;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: clamp(22px, 5.5vw, 32px);
+            font-weight: 600;
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            -moz-appearance: textfield;
+            text-align: center;
+            min-height: 68px;
+        }
+        .m-input::-webkit-outer-spin-button,
+        .m-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+        .m-input:focus { border-color: var(--terra); background: var(--parchment); }
+        .m-input.active {
+            border-color: var(--terra);
+            box-shadow: 0 0 0 3px rgba(192,82,40,0.14);
+        }
+        .m-input.sm {
+            font-size: clamp(16px, 4vw, 24px);
+            min-height: 58px;
+            padding: 10px 8px;
+        }
+
+        .m-unit {
+            text-align: center;
+            margin-top: 5px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+
+        .conv-arrow {
+            color: var(--terra);
+            font-size: 22px;
+            text-align: center;
+            padding: 0 4px;
+            padding-top: 28px;
+        }
+
+        .frac-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+
+        .frac-btn {
+            background: var(--parchment-w);
+            border: 1.5px solid var(--parchment-d);
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-mid);
+            cursor: pointer;
+            transition: all 0.14s;
+            min-width: 44px;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+            flex: 1;
+            max-width: 56px;
+        }
+        .frac-btn:hover { background: var(--terra); border-color: var(--terra-dark); color: white; transform: translateY(-1px); }
+        .frac-btn:active { transform: translateY(0); }
+        .frac-btn.active { background: var(--terra); border-color: var(--terra-dark); color: white; }
+
+        .info-panel {
+            background: var(--parchment-w);
+            border: 2px solid var(--parchment-d);
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            gap: 18px;
+            align-items: center;
+        }
+        .info-block { flex: 1; }
+        .info-val {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1;
+        }
+        .info-sub {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-top: 3px;
+        }
+        .info-divider { width: 1px; height: 32px; background: var(--parchment-d); flex-shrink: 0; }
+
+        .cta-wrap { position: relative; }
+        .cta-pulse {
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            border: 2px solid var(--terra);
+            pointer-events: none;
+            animation: cta-ring 2.8s ease-out infinite;
+        }
+        @keyframes cta-ring {
+            0%   { transform: scale(1);    opacity: 0.5; }
+            60%  { transform: scale(1.03); opacity: 0; }
+            100% { transform: scale(1.03); opacity: 0; }
+        }
+
+        .cta-link {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: linear-gradient(135deg, var(--terra) 0%, var(--terra-dark) 100%);
+            border-radius: 16px;
+            padding: 18px 20px;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 18px rgba(192,82,40,0.4);
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .cta-link:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(192,82,40,0.5); }
+        .cta-link:active { transform: translateY(0); }
+        .cta-icon  { font-size: 34px; flex-shrink: 0; }
+        .cta-title { font-size: 15px; font-weight: 700; color: white; margin-bottom: 2px; }
+        .cta-sub   { font-size: 12.5px; color: rgba(255,255,255,0.72); }
+        .cta-arrow { font-size: 18px; color: rgba(255,255,255,0.55); margin-left: auto; flex-shrink: 0; }
+
+        .cheat-btn {
+            width: 100%;
+            background: var(--border-dark);
+            border: 1.5px solid var(--border-mid);
+            border-radius: 12px;
+            padding: 16px 20px;
+            color: var(--parchment);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .cheat-btn:hover { background: rgba(245,237,224,0.1); border-color: rgba(245,237,224,0.22); }
+
+        @keyframes numFlash {
+            0%   { opacity: 0.4; transform: scale(0.975); }
+            100% { opacity: 1;   transform: scale(1); }
+        }
+        .flash { animation: numFlash 0.18s ease-out; }
+
+        @keyframes riseIn {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .rise { opacity: 0; animation: riseIn 0.55s ease-out forwards; }
+        .rise-d1 { animation-delay: 0.05s; }
+        .rise-d2 { animation-delay: 0.15s; }
+        .rise-d3 { animation-delay: 0.27s; }
+        .rise-d4 { animation-delay: 0.38s; }
+
+        .divider { height: 1.5px; background: var(--parchment-d); }
+        .match { background: rgba(192,82,40,0.12); border-radius: 2px; font-weight: 600; }
+
+        .sec-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .footnote {
+            font-size: 11.5px;
+            color: rgba(245,237,224,0.22);
+            text-align: center;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="ring" style="width:700px;height:700px;top:-280px;right:-220px;"></div>
+    <div class="ring" style="width:450px;height:450px;bottom:-120px;left:-180px;"></div>
+    <div class="ring" style="width:180px;height:180px;top:38%;right:3%;border-color:rgba(192,82,40,0.07);"></div>
+
+    <div class="page-content" style="max-width:680px;margin:0 auto;padding:0 16px 80px;">
+
+        <header class="rise rise-d1" style="padding:32px 0 0;">
+            <div style="margin-bottom:32px;">
+                <div class="site-logo" style="font-size:22px;">Cups to <span style="color:var(--terra);">Grams</span> <span style="color:var(--amber);">Converter</span></div>
+                <div style="font-size:11px;letter-spacing:0.08em;color:rgba(245,237,224,0.35);margin-top:3px;">
+                    by <span style="color:rgba(245,237,224,0.55);font-weight:600;">GramScale</span> — Precision Kitchen Conversions
+                </div>
+            </div>
+        </header>
+
+        <div class="card rise rise-d2" style="margin-top:0;padding:22px;">
+
+            <!-- Ingredient Picker -->
+            <div style="margin-bottom:18px;">
+                <div class="slabel">Ingredient</div>
+                <div class="dropdown-wrap">
+                    <button class="ing-btn" id="ing-btn" onclick="toggleDrop()" aria-haspopup="listbox" aria-expanded="false">
+                        <span style="display:flex;align-items:center;gap:10px;overflow:hidden;">
+                            <span id="sel-emoji" style="font-size:20px;flex-shrink:0;">🌾</span>
+                            <span id="sel-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">All-Purpose Flour</span>
+                        </span>
+                        <span id="drop-arrow" style="color:var(--text-dim);font-size:11px;flex-shrink:0;margin-left:8px;transition:transform 0.2s;">▼</span>
+                    </button>
+                    <div class="dropdown" id="dropdown">
+                        <input class="dropdown-search" id="drop-search" type="text"
+                            placeholder="Search ingredients…" autocomplete="off"
+                            oninput="filterList(this.value)">
+                        <div class="dropdown-list" id="drop-list" role="listbox"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pro Tip -->
+            <div class="pro-tip" id="pro-tip" style="margin-bottom:20px;">
+                <div class="pro-tip-label">💡 Did you know?</div>
+                <div class="pro-tip-text" id="pro-tip-text">
+                    Scooping directly from the bag can add up to 50g extra. Spoon flour into the cup and level with a knife—or better yet, use a scale!
+                </div>
+            </div>
+
+            <!-- Main: Cups ⇌ Grams -->
+            <div style="display:grid;grid-template-columns:1fr 34px 1fr;gap:10px;align-items:start;margin-bottom:14px;">
+                <div>
+                    <div class="slabel">Volume</div>
+                    <input class="m-input active" id="cups-in" type="number" inputmode="decimal"
+                        placeholder="0" min="0" step="any"
+                        oninput="onCups(this.value)" onfocus="setActive('cups')">
+                    <div class="m-unit">cups</div>
+                </div>
+                <div class="conv-arrow">⇌</div>
+                <div>
+                    <div class="slabel">Weight</div>
+                    <input class="m-input" id="grams-in" type="number" inputmode="decimal"
+                        placeholder="0" min="0" step="any"
+                        oninput="onGrams(this.value)" onfocus="setActive('grams')">
+                    <div class="m-unit">grams</div>
+                </div>
+            </div>
+
+            <!-- Ounces + mL -->
+            <div class="divider" style="margin-bottom:14px;"></div>
+            <div class="sec-grid">
+                <div>
+                    <div class="slabel">Ounces</div>
+                    <input class="m-input sm" id="oz-in" type="number" inputmode="decimal"
+                        placeholder="0" min="0" step="any"
+                        oninput="onOz(this.value)" onfocus="setActive('oz')">
+                    <div class="m-unit">oz</div>
+                </div>
+                <div>
+                    <div class="slabel">Millilitres</div>
+                    <input class="m-input sm" id="ml-in" type="number" inputmode="decimal"
+                        placeholder="0" min="0" step="any"
+                        oninput="onMl(this.value)" onfocus="setActive('ml')">
+                    <div class="m-unit">mL</div>
+                </div>
+            </div>
+
+            <!-- Density bar -->
+            <div class="info-panel" style="margin-bottom:18px;">
+                <div class="info-block">
+                    <div class="info-val" id="density-cup">125g</div>
+                    <div class="info-sub">per cup</div>
+                </div>
+                <div class="info-divider"></div>
+                <div class="info-block">
+                    <div class="info-val" id="density-ml">0.565g</div>
+                    <div class="info-sub">per mL</div>
+                </div>
+                <div class="info-divider"></div>
+                <div class="info-block">
+                    <div class="info-val" id="density-oz">4.41oz</div>
+                    <div class="info-sub">per cup</div>
+                </div>
+            </div>
+
+            <!-- Fraction buttons -->
+            <div class="divider" style="margin-bottom:14px;"></div>
+            <div>
+                <div class="slabel" style="margin-bottom:8px;">Quick fractions (cups)</div>
+                <div class="frac-grid">
+                    <button class="frac-btn" data-val="0.125" onclick="pickFrac(0.125)">⅛</button>
+                    <button class="frac-btn" data-val="0.25"  onclick="pickFrac(0.25)">¼</button>
+                    <button class="frac-btn" data-val="0.333" onclick="pickFrac(0.333)">⅓</button>
+                    <button class="frac-btn" data-val="0.5"   onclick="pickFrac(0.5)">½</button>
+                    <button class="frac-btn" data-val="0.667" onclick="pickFrac(0.667)">⅔</button>
+                    <button class="frac-btn" data-val="0.75"  onclick="pickFrac(0.75)">¾</button>
+                    <button class="frac-btn" data-val="1"     onclick="pickFrac(1)">1</button>
+                    <button class="frac-btn" data-val="1.5"   onclick="pickFrac(1.5)">1½</button>
+                    <button class="frac-btn" data-val="2"     onclick="pickFrac(2)">2</button>
+                    <button class="frac-btn" data-val="3"     onclick="pickFrac(3)">3</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Scale CTA -->
+        <div class="cta-wrap rise rise-d3" style="margin-top:22px;">
+            <div class="cta-pulse"></div>
+            <a class="cta-link" href="https://www.amazon.com/s?k=digital+kitchen+scale&tag=gramscale-placeholder-20" target="_blank" rel="noopener noreferrer">
+                <div class="cta-icon">⚖️</div>
+                <div style="flex:1;min-width:0;">
+                    <div class="cta-title">Stop guessing. Get a digital kitchen scale.</div>
+                    <div class="cta-sub">Our recommended scale for perfect results every time — from $15+</div>
+                </div>
+                <div class="cta-arrow">→</div>
+            </a>
+        </div>
+
+        <!-- Cheat Sheet -->
+        <div class="rise rise-d4" style="margin-top:44px;text-align:center;">
+            <div class="font-display" style="font-size:21px;font-weight:600;color:var(--parchment);margin-bottom:8px;">
+                Keep precision on your fridge.
+            </div>
+            <p style="font-size:14px;color:rgba(245,237,224,0.42);margin-bottom:18px;line-height:1.6;">
+                Download our free printable cheat sheet — all 21 ingredients in one clean page.
+            </p>
+            <button class="cheat-btn" onclick="openCheatSheet()">
+                <span>📄</span>
+                <span>Download Free Conversion Cheat Sheet</span>
+            </button>
+        </div>
+
+        <div style="margin-top:52px;">
+            <p class="footnote">
+                GramScale uses standardized culinary weight references. Values may vary slightly by brand or scooping method.<br>
+                No account required &nbsp;·&nbsp; No data collected &nbsp;·&nbsp; No fluff — just precise baking.
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+    const INGREDIENTS = [
+        { id:'ap-flour',       name:'All-Purpose Flour',     gpCup:125, gPerMl:0.565, emoji:'🌾',
+          tip:'Scooping directly from the bag can add up to 50g extra. Spoon flour into the cup and level with a knife—or better yet, weigh it!' },
+        { id:'baking-powder',  name:'Baking Powder',         gpCup:192, gPerMl:0.812, emoji:'⚗️',
+          tip:'Small measurement errors cause under- or over-rising. For amounts under 1 tsp, a precise scale is non-negotiable.' },
+        { id:'baking-soda',    name:'Baking Soda',           gpCup:216, gPerMl:0.913, emoji:'🧪',
+          tip:'A ¼ tsp variance can ruin the entire acid-base balance of a recipe. Weigh to the gram for consistent results every time.' },
+        { id:'bread-flour',    name:'Bread Flour',           gpCup:127, gPerMl:0.537, emoji:'🍞',
+          tip:'Higher protein content makes bread flour denser than all-purpose. Weighing is key for consistent gluten development and a perfect rise.' },
+        { id:'brown-sugar',    name:'Brown Sugar (Packed)',  gpCup:213, gPerMl:0.848, emoji:'🟫',
+          tip:'Packing level can change weight by 40g+ per cup. Loosely vs. firmly packed sugar? A scale eliminates the guesswork entirely.' },
+        { id:'butter',         name:'Butter',                gpCup:227, gPerMl:0.959, emoji:'🧈',
+          tip:'The fat-to-flour ratio is the most critical variable in pastry. For croissants or puff pastry, even a few grams off ruins the layers.' },
+        { id:'choc-chips',     name:'Chocolate Chips',       gpCup:170, gPerMl:0.719, emoji:'🍪',
+          tip:'Air gaps between chips make volume wildly inaccurate. A scale ensures the perfect chocolate-to-dough ratio in every single batch.' },
+        { id:'cocoa',          name:'Cocoa Powder',          gpCup:100, gPerMl:0.508, emoji:'🍫',
+          tip:'Very light and fluffy — the easiest ingredient to over-measure by volume. Excess cocoa makes baked goods dry and intensely bitter.' },
+        { id:'cornstarch',     name:'Cornstarch',            gpCup:128, gPerMl:0.541, emoji:'⬜',
+          tip:'Settles and clumps easily. Precise amounts are critical — too much or too little completely changes sauce and custard texture.' },
+        { id:'eggs',           name:'Eggs (Cracked)',        gpCup:243, gPerMl:1.027, emoji:'🥚',
+          tip:'Heads up: recipes typically call for eggs by count, not cups. 1 large egg ≈ 50g. If you need a cup equivalent, 1 cup of cracked eggs ≈ 4–5 large eggs ≈ 243g.' },
+        { id:'gran-sugar',     name:'Granulated Sugar',      gpCup:200, gPerMl:0.850, emoji:'✨',
+          tip:'One of the more consistent dry ingredients by volume, but precision still matters for caramelization ratios and texture in baked goods.' },
+        { id:'greek-yogurt',   name:'Greek Yogurt',          gpCup:245, gPerMl:1.038, emoji:'🥣',
+          tip:'Density varies significantly by brand and strain level. Weighing ensures consistent moisture content in muffins and cakes.' },
+        { id:'heavy-cream',    name:'Heavy Cream',           gpCup:238, gPerMl:0.980, emoji:'🫙',
+          tip:'Higher fat content makes it slightly denser than milk. Critical for ganaches and mousses — a few grams off changes the set point.' },
+        { id:'honey',          name:'Honey / Corn Syrup',    gpCup:340, gPerMl:1.314, emoji:'🍯',
+          tip:'Extremely dense and sticky — a significant amount clings to measuring cups, creating large errors. Always weigh for accuracy.' },
+        { id:'powdered-sugar', name:'Powdered Sugar',        gpCup:120, gPerMl:0.476, emoji:'❄️',
+          tip:'Prone to clumping and settling. Sifting can dramatically reduce apparent volume. Always weigh for consistent sweetness in frostings.' },
+        { id:'rice',           name:'Rice (Uncooked)',        gpCup:195, gPerMl:0.824, emoji:'🍚',
+          tip:'Grain length changes density dramatically. Short-grain vs. long-grain rice can vary by 30g per cup — affecting cooking time too.' },
+        { id:'rolled-oats',    name:'Rolled Oats',           gpCup:95,  gPerMl:0.402, emoji:'🌿',
+          tip:'Large flakes create huge air pockets. Thick-cut vs. thin-cut oats can vary by 20g+ per cup — a big difference in texture.' },
+        { id:'fine-salt',      name:'Salt (Fine)',           gpCup:273, gPerMl:1.217, emoji:'🧂',
+          tip:'Over-salting by volume is a recipe killer! Different salt types vary wildly — kosher salt weighs only ~144g per cup.' },
+        { id:'veg-oil',        name:'Vegetable Oil',         gpCup:218, gPerMl:0.905, emoji:'🫗',
+          tip:'Lighter than water and milk. Precise amounts are essential for cake moisture — too little is dry, too much is greasy.' },
+        { id:'water',          name:'Water',                 gpCup:237, gPerMl:1.000, emoji:'💧',
+          tip:'The universal baseline: 1 mL = 1g. Hydration percentages in bread baking demand exact measurements — even a few grams matters.' },
+        { id:'whole-milk',     name:'Whole Milk',            gpCup:240, gPerMl:1.036, emoji:'🥛',
+          tip:'Slightly denser than water. For precise custards, crème brûlée, or delicate sauces, weighing milk ensures perfect consistency.' },
+    ];
+
+    let current  = INGREDIENTS[0];
+    let active   = 'cups';
+    let dropOpen = false;
+
+    function fmt(v, d) {
+        if (v === '' || v === null || v === undefined || isNaN(v)) return '';
+        const n = parseFloat(v);
+        if (n === 0) return '0';
+        return parseFloat(n.toFixed(d)).toString();
+    }
+
+    function flash(el) { el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
+
+    const OZ_PER_GRAM = 1 / 28.3495;
+
+    function c2g(c)   { return c * current.gpCup; }
+    function g2c(g)   { return g / current.gpCup; }
+    function g2oz(g)  { return g * OZ_PER_GRAM; }
+    function oz2g(oz) { return oz / OZ_PER_GRAM; }
+    function g2ml(g)  { return g / current.gPerMl; }
+    function ml2g(ml) { return ml * current.gPerMl; }
+
+    function onCups(val) {
+        const eG=$('grams-in'), eOz=$('oz-in'), eMl=$('ml-in');
+        if (val===''||parseFloat(val)<0){eG.value=eOz.value=eMl.value='';return;}
+        const cups=parseFloat(val); if(isNaN(cups))return;
+        const g=c2g(cups);
+        eG.value=fmt(g,1); eOz.value=fmt(g2oz(g),2); eMl.value=fmt(g2ml(g),1);
+        flash(eG); flash(eOz); flash(eMl); syncFracBtns(cups);
+    }
+
+    function onGrams(val) {
+        const eC=$('cups-in'), eOz=$('oz-in'), eMl=$('ml-in');
+        if (val===''||parseFloat(val)<0){eC.value=eOz.value=eMl.value='';return;}
+        const g=parseFloat(val); if(isNaN(g))return;
+        eC.value=fmt(g2c(g),3); eOz.value=fmt(g2oz(g),2); eMl.value=fmt(g2ml(g),1);
+        flash(eC); flash(eOz); flash(eMl); syncFracBtns(g2c(g));
+    }
+
+    function onOz(val) {
+        const eC=$('cups-in'), eG=$('grams-in'), eMl=$('ml-in');
+        if (val===''||parseFloat(val)<0){eC.value=eG.value=eMl.value='';return;}
+        const oz=parseFloat(val); if(isNaN(oz))return;
+        const g=oz2g(oz);
+        eC.value=fmt(g2c(g),3); eG.value=fmt(g,1); eMl.value=fmt(g2ml(g),1);
+        flash(eC); flash(eG); flash(eMl); syncFracBtns(g2c(g));
+    }
+
+    function onMl(val) {
+        const eC=$('cups-in'), eG=$('grams-in'), eOz=$('oz-in');
+        if (val===''||parseFloat(val)<0){eC.value=eG.value=eOz.value='';return;}
+        const ml=parseFloat(val); if(isNaN(ml))return;
+        const g=ml2g(ml);
+        eC.value=fmt(g2c(g),3); eG.value=fmt(g,1); eOz.value=fmt(g2oz(g),2);
+        flash(eC); flash(eG); flash(eOz); syncFracBtns(g2c(g));
+    }
+
+    const PANELS = {cups:'cups-in', grams:'grams-in', oz:'oz-in', ml:'ml-in'};
+    function setActive(panel) {
+        active=panel;
+        Object.entries(PANELS).forEach(([p,id])=>$(id).classList.toggle('active',p===panel));
+    }
+
+    function pickFrac(val) { $('cups-in').value=val; onCups(val); setActive('cups'); }
+
+    function syncFracBtns(cupsVal) {
+        document.querySelectorAll('.frac-btn').forEach(btn=>{
+            btn.classList.toggle('active', Math.abs(parseFloat(btn.dataset.val)-cupsVal)<0.001);
+        });
+    }
+
+    function updateDensityBar() {
+        $('density-cup').textContent = current.gpCup + 'g';
+        $('density-ml').textContent  = current.gPerMl + 'g';
+        $('density-oz').textContent  = fmt(g2oz(current.gpCup), 2) + 'oz';
+    }
+
+    function selectIngredient(id) {
+        current = INGREDIENTS.find(i=>i.id===id);
+        $('sel-emoji').textContent = current.emoji;
+        $('sel-name').textContent  = current.name;
+        $('pro-tip-text').textContent = current.tip;
+        updateDensityBar();
+        const v = {cups:$('cups-in').value, grams:$('grams-in').value, oz:$('oz-in').value, ml:$('ml-in').value};
+        if      (active==='cups'  && v.cups  !=='') onCups(v.cups);
+        else if (active==='grams' && v.grams !=='') onGrams(v.grams);
+        else if (active==='oz'    && v.oz    !=='') onOz(v.oz);
+        else if (active==='ml'    && v.ml    !=='') onMl(v.ml);
+        closeDrop();
+    }
+
+    function renderList(query) {
+        const q=(query||'').toLowerCase().trim();
+        const filtered=(q?INGREDIENTS.filter(i=>i.name.toLowerCase().includes(q)):INGREDIENTS)
+            .slice().sort((a,b)=>a.name.localeCompare(b.name));
+        const list=$('drop-list');
+        if(!filtered.length){list.innerHTML='<div style="padding:14px;text-align:center;font-size:13px;color:var(--text-dim);">No results</div>';return;}
+        list.innerHTML=filtered.map(ing=>{
+            let label=ing.name;
+            if(q){const idx=ing.name.toLowerCase().indexOf(q);if(idx>=0)label=ing.name.slice(0,idx)+'<span class="match">'+ing.name.slice(idx,idx+q.length)+'</span>'+ing.name.slice(idx+q.length);}
+            return`<div class="d-item${ing.id===current.id?' selected':''}" role="option" onclick="selectIngredient('${ing.id}')">
+                <span style="font-size:18px;">${ing.emoji}</span>
+                <span>${label}</span>
+                <span class="d-badge">${ing.gpCup}g/cup · ${ing.gPerMl}g/mL</span>
+            </div>`;
+        }).join('');
+    }
+
+    function toggleDrop(){dropOpen?closeDrop():openDrop();}
+
+    function openDrop(){
+        dropOpen=true;
+        $('dropdown').classList.add('open'); $('ing-btn').classList.add('open');
+        $('ing-btn').setAttribute('aria-expanded','true');
+        $('drop-arrow').style.transform='rotate(180deg)';
+        renderList('');
+        setTimeout(()=>{$('drop-search').value='';$('drop-search').focus();},60);
+    }
+
+    function closeDrop(){
+        dropOpen=false;
+        $('dropdown').classList.remove('open'); $('ing-btn').classList.remove('open');
+        $('ing-btn').setAttribute('aria-expanded','false');
+        $('drop-arrow').style.transform='rotate(0deg)';
+    }
+
+    function filterList(q){renderList(q);}
+
+    document.addEventListener('click',e=>{if(!document.querySelector('.dropdown-wrap').contains(e.target))closeDrop();});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrop();});
+
+    function openCheatSheet() {
+        const rows=INGREDIENTS.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(ing=>`
+            <tr>
+                <td>${ing.emoji} ${ing.name}</td>
+                <td class="num">${ing.gpCup}g</td>
+                <td class="num">${parseFloat((ing.gpCup*OZ_PER_GRAM).toFixed(1))}oz</td>
+                <td class="num">${ing.gPerMl}g/mL</td>
+                <td class="num">${Math.round(ing.gpCup/2)}g</td>
+                <td class="num">${Math.round(ing.gpCup/4)}g</td>
+                <td class="num">${Math.round(ing.gpCup/8)}g</td>
+            </tr>`).join('');
+        const html=`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>GramScale — Cheat Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:opsz,wght@9..40,400;9..40,600&display=swap" rel="stylesheet">
+<style>body{font-family:'DM Sans',sans-serif;max-width:780px;margin:0 auto;padding:24px;color:#2A180C;}.hd{margin-bottom:18px;border-bottom:2px solid #C05228;padding-bottom:14px;}h1{font-family:'Playfair Display',serif;font-size:24px;margin:0 0 4px;}h1 span{color:#C05228;}.sub{font-size:13px;color:#8C6A4E;}table{width:100%;border-collapse:collapse;font-size:12.5px;}th{background:#2A180C;color:#F5EDE0;padding:9px 10px;text-align:left;font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;}td{padding:8px 10px;border-bottom:1px solid #EDE1CE;}tr:nth-child(even) td{background:#FAF6F0;}tr:last-child td{border:none;}.num{font-variant-numeric:tabular-nums;font-weight:600;color:#5A3A24;}.ft{margin-top:16px;padding-top:12px;border-top:1px solid #EDE1CE;font-size:11px;color:#8C6A4E;text-align:center;}.ft strong{color:#C05228;}@media print{body{padding:10px;}}</style></head>
+<body><div class="hd"><h1>Cups to <span>Grams</span> Converter — Cheat Sheet</h1><div class="sub">Weight equivalents for standard US measurements. Keep this on your fridge.</div></div>
+<table><thead><tr><th>Ingredient</th><th>1 Cup</th><th>1 Cup (oz)</th><th>Density (g/mL)</th><th>½ Cup</th><th>¼ Cup</th><th>⅛ Cup</th></tr></thead><tbody>${rows}</tbody></table>
+<div class="ft"><strong>GramScale</strong> · Standard culinary references · Values vary by brand/method · Use a digital scale for best results</div>
+<script>setTimeout(()=>window.print(),350);<\/script></body></html>`;
+        const win=window.open('','_blank','width=820,height=940');
+        if(win){win.document.write(html);win.document.close();}
+    }
+
+    function $(id){return document.getElementById(id);}
+
+    (function init(){
+        $('cups-in').value='1';
+        onCups(1);
+        syncFracBtns(1);
+        updateDensityBar();
+    })();
+    </script>
+</body>
+</html>
