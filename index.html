@@ -3,8 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cups to Grams Converter — GramScale</title>
-    <meta name="description" content="Instant, ingredient-specific cup-to-gram and mL-to-gram conversions for perfect baking. No account. No guessing.">
+    <title>Cups to Grams Converter — Free Baking Calculator | 21 Ingredients</title>
+    <meta name="description" content="Free cups to grams converter for baking — instantly convert flour, sugar, butter, honey and 17 more ingredients. Also converts to ounces and mL. No signup needed.">
+
+    <!-- Open Graph / Social sharing -->
+    <meta property="og:title" content="Cups to Grams Converter — Free Baking Calculator">
+    <meta property="og:description" content="Instantly convert cups to grams for 21 baking ingredients including flour, sugar, butter and more. Free, fast, no account needed.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://cuptogramsconverter.com/">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Cups to Grams Converter — Free Baking Calculator">
+    <meta name="twitter:description" content="Instantly convert cups to grams for 21 baking ingredients. Free and fast.">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://cuptogramsconverter.com/">
+
+    <!-- FAQ + WebApplication Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "name": "Cups to Grams Converter",
+          "url": "https://cuptogramsconverter.com/",
+          "description": "Free online calculator to convert cups to grams for 21 common baking ingredients including flour, sugar, butter and more.",
+          "applicationCategory": "UtilitiesApplication",
+          "operatingSystem": "Any",
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "GBP" }
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "How many grams is 1 cup of flour?",
+              "acceptedAnswer": { "@type": "Answer", "text": "1 cup of all-purpose flour weighs approximately 125 grams. Bread flour is slightly heavier at 127g per cup. The exact weight depends on how you fill the cup — spooning flour in gently gives about 120–125g, while scooping directly can reach 150g or more." }
+            },
+            {
+              "@type": "Question",
+              "name": "How many grams is 1 cup of sugar?",
+              "acceptedAnswer": { "@type": "Answer", "text": "1 cup of granulated white sugar weighs 200 grams. Brown sugar (packed) is heavier at 213g per cup. Powdered (icing) sugar is lighter at around 120g per cup." }
+            },
+            {
+              "@type": "Question",
+              "name": "How many grams is 1 cup of butter?",
+              "acceptedAnswer": { "@type": "Answer", "text": "1 cup of butter weighs 227 grams (equivalent to 2 standard sticks of butter in US measurements, or about 8 ounces)." }
+            },
+            {
+              "@type": "Question",
+              "name": "Why do cups to grams conversions vary by ingredient?",
+              "acceptedAnswer": { "@type": "Answer", "text": "A cup is a measure of volume, while grams measure weight. Because different ingredients have different densities — honey is much denser than flour, for example — the same volume contains different amounts by weight. This is why ingredient-specific converters like this one give more accurate results than a generic conversion." }
+            },
+            {
+              "@type": "Question",
+              "name": "Is it better to measure baking ingredients in grams or cups?",
+              "acceptedAnswer": { "@type": "Answer", "text": "Grams are more accurate for baking. Cup measurements are imprecise because the amount you get depends on how tightly you pack the ingredient — especially for flour, where scooping can give 30–50% more than the intended amount. A digital kitchen scale and gram measurements give consistent, repeatable results." }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -388,6 +448,44 @@
             text-align: center;
             line-height: 1.8;
         }
+
+        .seo-section {
+            margin-top: 52px;
+            padding-top: 32px;
+            border-top: 1px solid rgba(245,237,224,0.08);
+        }
+        .seo-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--parchment);
+            margin-bottom: 10px;
+        }
+        .seo-section p {
+            font-size: 13.5px;
+            color: rgba(245,237,224,0.45);
+            line-height: 1.75;
+            margin-bottom: 16px;
+        }
+        .faq-item {
+            margin-bottom: 18px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid rgba(245,237,224,0.06);
+        }
+        .faq-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .faq-item h3 {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: rgba(245,237,224,0.65);
+            margin-bottom: 5px;
+        }
+        .faq-item p {
+            font-size: 13px;
+            color: rgba(245,237,224,0.38);
+            line-height: 1.7;
+            margin-bottom: 0;
+        }
     </style>
 </head>
 <body>
@@ -399,7 +497,7 @@
 
         <header class="rise rise-d1" style="padding:32px 0 0;">
             <div style="margin-bottom:32px;">
-                <div class="site-logo" style="font-size:22px;">Cups to <span style="color:var(--terra);">Grams</span> <span style="color:var(--amber);">Converter</span></div>
+                <h1 class="site-logo" style="font-size:22px;">Cups to <span style="color:var(--terra);">Grams</span> <span style="color:var(--amber);">Converter</span></h1>
                 <div style="font-size:11px;letter-spacing:0.08em;color:rgba(245,237,224,0.35);margin-top:3px;">
                     by <span style="color:rgba(245,237,224,0.55);font-weight:600;">GramScale</span> — Precision Kitchen Conversions
                 </div>
@@ -515,65 +613,18 @@
         <!-- Scale CTA -->
         <div class="cta-wrap rise rise-d3" style="margin-top:22px;">
             <div class="cta-pulse"></div>
-            <a class="cta-link" href="https://www.amazon.co.uk/dp/B07KC3HPVN?tag=usefultools07-21" target="_blank" rel="noopener noreferrer">
+            <a class="cta-link" href="https://www.amazon.co.uk/s?k=digital+kitchen+scale&tag=usefultools07-21" target="_blank" rel="noopener noreferrer">
                 <div class="cta-icon">⚖️</div>
                 <div style="flex:1;min-width:0;">
                     <div class="cta-title">Stop guessing. Get a digital kitchen scale.</div>
-                    <div class="cta-sub">Our recommended scale for perfect results every time</div>
+                    <div class="cta-sub">Our recommended scale for perfect results every time — from £15+</div>
                 </div>
                 <div class="cta-arrow">→</div>
             </a>
         </div>
-        
-        <!-- Affiliate Disclosure -->
-        <p style="font-size:11px;color:rgba(245,237,224,0.35);text-align:center;margin-top:12px;">
-            As an Amazon Associate, GramScale earns from qualifying purchases.
-        </p>
-
-        <!-- Complete Your Setup -->
-        <div style="margin-top:44px;padding:28px;background:rgba(245,237,224,0.04);border:1.5px solid var(--border-mid);border-radius:16px;">
-            <div class="font-display" style="font-size:19px;font-weight:600;color:var(--parchment);margin-bottom:6px;text-align:center;">
-                Complete Your Precision Setup
-            </div>
-            <p style="font-size:13px;color:rgba(245,237,224,0.55);text-align:center;margin-bottom:22px;line-height:1.7;">
-                Scales work best with the right gear. Thousands of bakers pair these tools with their scales for perfect, consistent results.
-            </p>
-            
-            <!-- Product 1: Measuring Cups -->
-            <div style="margin-bottom:16px;padding:16px;background:var(--parchment);border-radius:12px;color:var(--text);">
-                <div style="display:flex;gap:14px;align-items:flex-start;">
-                    <div style="font-size:28px;flex-shrink:0;">🥤</div>
-                    <div style="flex:1;">
-                        <div style="font-weight:600;font-size:15px;margin-bottom:3px;">Stainless Steel Measuring Cup Set</div>
-                        <p style="font-size:13px;color:var(--text-mid);margin-bottom:10px;line-height:1.5;">
-                            Quick everyday measurements + volume reference. Still useful even with a scale for recipes that call for cups.
-                        </p>
-                        <a href="https://www.amazon.co.uk/dp/B0816MB9Q3?tag=usefultools07-21" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--terra);text-decoration:none;transition:opacity 0.2s;opacity:1;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1';">
-                            View on Amazon <span style="font-size:11px;">→</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 2: Scale Mat -->
-            <div style="padding:16px;background:var(--parchment);border-radius:12px;color:var(--text);">
-                <div style="display:flex;gap:14px;align-items:flex-start;">
-                    <div style="font-size:28px;flex-shrink:0;">🧹</div>
-                    <div style="flex:1;">
-                        <div style="font-weight:600;font-size:15px;margin-bottom:3px;">Silicone Baking Mat</div>
-                        <p style="font-size:13px;color:var(--text-mid);margin-bottom:10px;line-height:1.5;">
-                            Keeps ingredients contained and prevents spills. Makes precision baking cleaner and easier.
-                        </p>
-                        <a href="https://www.amazon.co.uk/dp/B082H8M117?tag=usefultools07-21" target="_blank" rel="noopener noreferrer">
-                            View on Amazon <span style="font-size:11px;">→</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- Cheat Sheet -->
-        <div style="margin-top:44px;text-align:center;">
+        <div class="rise rise-d4" style="margin-top:44px;text-align:center;">
             <div class="font-display" style="font-size:21px;font-weight:600;color:var(--parchment);margin-bottom:8px;">
                 Keep precision on your fridge.
             </div>
@@ -586,12 +637,38 @@
             </button>
         </div>
 
-        <div style="margin-top:52px;">
+        <!-- SEO Content Section -->
+        <div class="seo-section">
+            <h2>Why weigh instead of measure in cups?</h2>
+            <p>Cup measurements vary depending on how you fill them. Scooping flour directly from the bag can pack in 30–50g more than a levelled spoon-fill — enough to make a bread dough noticeably stiffer or a cake turn out dry. A digital kitchen scale and gram measurements remove that variable entirely, giving you consistent, repeatable results every time.</p>
+            <p>This converter uses standardised culinary weight references for 21 common baking ingredients. Because every ingredient has a different density — honey is nearly three times denser than rolled oats — the conversion from cups to grams is ingredient-specific.</p>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="seo-section">
+            <h2>Common questions</h2>
+            <div class="faq-item">
+                <h3>How many grams is 1 cup of flour?</h3>
+                <p>1 cup of all-purpose flour weighs approximately 125g when spooned and levelled. Scooping directly from the bag can give 145–155g. Bread flour is slightly heavier at 127g per cup.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How many grams is 1 cup of sugar?</h3>
+                <p>1 cup of granulated white sugar is 200g. Packed brown sugar comes in at 213g per cup. Powdered (icing) sugar is lighter — around 120g per cup due to its fine, airy texture.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How many grams is 1 cup of butter?</h3>
+                <p>1 cup of butter weighs 227g — equivalent to 2 standard US sticks, or about 8 ounces.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Do grams-per-cup values vary by ingredient?</h3>
+                <p>Yes — always. A cup measures volume, not weight. Because each ingredient has a different density, the gram equivalent per cup is unique to that ingredient. Use the dropdown above to select your ingredient for an accurate conversion.</p>
+            </div>
+        </div>
+
+        <div style="margin-top:40px;">
             <p class="footnote">
                 GramScale uses standardized culinary weight references. Values may vary slightly by brand or scooping method.<br>
-                No account required &nbsp;·&nbsp; No data collected &nbsp;·&nbsp; No fluff — just precise baking.<br>
-                <br>
-                <em>This site contains affiliate links. We earn a commission if you make a purchase through these links at no extra cost to you.</em>
+                No account required &nbsp;·&nbsp; No data collected &nbsp;·&nbsp; No fluff — just precise baking.
             </p>
         </div>
 
