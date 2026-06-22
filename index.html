@@ -11,12 +11,19 @@
     <meta property="og:description" content="Instantly convert cups to grams for 21 baking ingredients including flour, sugar, butter and more. Free, fast, no account needed.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://cuptogramsconverter.com/">
-    <meta name="twitter:card" content="summary">
+    <meta property="og:image" content="https://cuptogramsconverter.com/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Cups to Grams Converter — Free Baking Calculator">
     <meta name="twitter:description" content="Instantly convert cups to grams for 21 baking ingredients. Free and fast.">
+    <meta name="twitter:image" content="https://cuptogramsconverter.com/og-image.jpg">
 
     <!-- Canonical URL -->
     <link rel="canonical" href="https://cuptogramsconverter.com/">
+
+    <!-- Crawler directive -->
+    <meta name="robots" content="index, follow">
 
     <!-- FAQ + WebApplication Schema -->
     <script type="application/ld+json">
@@ -59,6 +66,36 @@
               "@type": "Question",
               "name": "Is it better to measure baking ingredients in grams or cups?",
               "acceptedAnswer": { "@type": "Answer", "text": "Grams are more accurate for baking. Cup measurements are imprecise because the amount you get depends on how tightly you pack the ingredient — especially for flour, where scooping can give 30–50% more than the intended amount. A digital kitchen scale and gram measurements give consistent, repeatable results." }
+            },
+            {
+              "@type": "Question",
+              "name": "How many grams is half a cup of flour?",
+              "acceptedAnswer": { "@type": "Answer", "text": "Half a cup of all-purpose flour weighs approximately 62–63 grams when spooned and levelled. If you scoop directly from the bag, you may get 70–80g due to compaction. For best results, weigh the flour directly." }
+            },
+            {
+              "@type": "Question",
+              "name": "How many grams is 1 cup of oats?",
+              "acceptedAnswer": { "@type": "Answer", "text": "1 cup of rolled oats weighs approximately 95 grams. Oats have large air pockets between flakes, making them one of the lighter ingredients by volume. Thick-cut and thin-cut oats can vary by around 20g per cup." }
+            },
+            {
+              "@type": "Question",
+              "name": "How many grams is 1 cup of honey?",
+              "acceptedAnswer": { "@type": "Answer", "text": "1 cup of honey weighs approximately 340 grams — making it one of the heaviest ingredients by cup. Honey is very dense and sticky, and a significant amount clings to measuring cups, so weighing is strongly recommended for accuracy." }
+            },
+            {
+              "@type": "Question",
+              "name": "How many grams is 1 cup of cocoa powder?",
+              "acceptedAnswer": { "@type": "Answer", "text": "1 cup of cocoa powder weighs approximately 100 grams. Cocoa is very light and fluffy, making it one of the easiest ingredients to over-measure by volume. Excess cocoa can make baked goods dry and intensely bitter." }
+            },
+            {
+              "@type": "Question",
+              "name": "How many grams is a third of a cup of butter?",
+              "acceptedAnswer": { "@type": "Answer", "text": "One third of a cup of butter weighs approximately 76 grams. A full cup of butter is 227g, equivalent to 2 standard US sticks." }
+            },
+            {
+              "@type": "Question",
+              "name": "How many grams is 2 cups of sugar?",
+              "acceptedAnswer": { "@type": "Answer", "text": "2 cups of granulated white sugar weigh 400 grams. For brown sugar (packed), 2 cups comes to approximately 426 grams. Powdered sugar is lighter — 2 cups weighs around 240 grams." }
             }
           ]
         }
@@ -675,7 +712,7 @@
         </div>
 
         <!-- Cheat Sheet -->
-        <div style="margin-top:44px;text-align:center;">
+        <div id="cheat-sheet" style="margin-top:44px;text-align:center;">
             <div class="font-display" style="font-size:21px;font-weight:600;color:var(--parchment);margin-bottom:8px;">
                 Keep precision on your fridge.
             </div>
@@ -696,19 +733,43 @@
         </div>
 
         <!-- FAQ Section -->
-        <div class="seo-section">
+        <div class="seo-section" id="faq">
             <h2>Common questions</h2>
             <div class="faq-item">
                 <h3>How many grams is 1 cup of flour?</h3>
                 <p>1 cup of all-purpose flour weighs approximately 125g when spooned and levelled. Scooping directly from the bag can give 145–155g. Bread flour is slightly heavier at 127g per cup.</p>
             </div>
             <div class="faq-item">
+                <h3>How many grams is half a cup of flour?</h3>
+                <p>Half a cup of all-purpose flour weighs approximately 62–63g when spooned and levelled. Scooping directly from the bag can push this to 70–80g due to compaction — another reason a scale gives better results.</p>
+            </div>
+            <div class="faq-item">
                 <h3>How many grams is 1 cup of sugar?</h3>
                 <p>1 cup of granulated white sugar is 200g. Packed brown sugar comes in at 213g per cup. Powdered (icing) sugar is lighter — around 120g per cup due to its fine, airy texture.</p>
             </div>
             <div class="faq-item">
+                <h3>How many grams is 2 cups of sugar?</h3>
+                <p>2 cups of granulated white sugar weigh 400g. For packed brown sugar, 2 cups is approximately 426g. Powdered sugar is lighter — 2 cups weighs around 240g.</p>
+            </div>
+            <div class="faq-item">
                 <h3>How many grams is 1 cup of butter?</h3>
                 <p>1 cup of butter weighs 227g — equivalent to 2 standard US sticks, or about 8 ounces.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How many grams is a third of a cup of butter?</h3>
+                <p>One third of a cup of butter weighs approximately 76g. Because butter is dense and solid at room temperature, even small measurement errors affect fat-to-flour ratios noticeably in pastry.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How many grams is 1 cup of oats?</h3>
+                <p>1 cup of rolled oats weighs approximately 95g. Oats are light with large air pockets between flakes — thick-cut and thin-cut oats can vary by around 20g per cup, making weighing especially useful.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How many grams is 1 cup of honey?</h3>
+                <p>1 cup of honey weighs approximately 340g, making it one of the heaviest ingredients by cup. Honey is very dense and sticky — a significant amount clings to measuring cups, so always weigh honey for accuracy.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How many grams is 1 cup of cocoa powder?</h3>
+                <p>1 cup of cocoa powder weighs approximately 100g. Cocoa is very light and fluffy, making it one of the easiest ingredients to over-measure by volume. Too much cocoa makes baked goods dry and intensely bitter.</p>
             </div>
             <div class="faq-item">
                 <h3>Do grams-per-cup values vary by ingredient?</h3>
@@ -722,6 +783,30 @@
                 No account required &nbsp;·&nbsp; No data collected &nbsp;·&nbsp; No fluff — just precise baking.
             </p>
         </div>
+
+        <footer style="margin-top:48px;padding-top:24px;border-top:1px solid rgba(245,237,224,0.08);text-align:center;">
+            <div style="font-size:12px;color:rgba(245,237,224,0.35);line-height:2.6;letter-spacing:0.03em;">
+                <a href="#" style="color:rgba(245,237,224,0.45);text-decoration:none;transition:color 0.2s;"
+                   onmouseover="this.style.color='rgba(245,237,224,0.7)'" onmouseout="this.style.color='rgba(245,237,224,0.45)'">
+                    Cups to Grams Converter
+                </a>
+                &nbsp;·&nbsp;
+                <a href="#faq" style="color:rgba(245,237,224,0.45);text-decoration:none;transition:color 0.2s;"
+                   onmouseover="this.style.color='rgba(245,237,224,0.7)'" onmouseout="this.style.color='rgba(245,237,224,0.45)'">
+                    FAQ
+                </a>
+                &nbsp;·&nbsp;
+                <a href="#cheat-sheet" style="color:rgba(245,237,224,0.45);text-decoration:none;transition:color 0.2s;"
+                   onmouseover="this.style.color='rgba(245,237,224,0.7)'" onmouseout="this.style.color='rgba(245,237,224,0.45)'">
+                    Cheat Sheet
+                </a>
+                &nbsp;·&nbsp;
+                <span style="color:rgba(245,237,224,0.28);">© 2026 GramScale</span>
+            </div>
+            <p style="font-size:11px;color:rgba(245,237,224,0.22);margin-top:10px;line-height:1.8;">
+                As an Amazon Associate, GramScale earns from qualifying purchases.
+            </p>
+        </footer>
 
     </div>
 
